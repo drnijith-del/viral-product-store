@@ -40,8 +40,8 @@
         .product-footer { display: flex; justify-content: space-between; align-items: center; }
         .product-price { font-size: 18px; font-weight: 800; }
         .stars { font-size: 12px; color: #ffc107; }
-        .add-btn { background: #000; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
-        .add-btn:hover { background: #333; }
+        .buy-btn { background: #000; color: #fff; border: none; padding: 10px 16px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.2s; width: 100%; margin-top: 12px; }
+        .buy-btn:hover { background: #333; }
         
         /* Why Section */
         .why-section { background: #f5f5f5; padding: 80px 40px; margin-top: 60px; }
@@ -57,7 +57,7 @@
         /* Modal */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
         .modal.show { display: flex; align-items: center; justify-content: center; }
-        .modal-content { background: #fff; padding: 40px; border-radius: 12px; width: 90%; max-width: 500px; }
+        .modal-content { background: #fff; padding: 40px; border-radius: 12px; width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; }
         .modal-header { font-size: 24px; font-weight: 800; margin-bottom: 24px; }
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -71,8 +71,6 @@
         .btn-cancel { background: #f5f5f5; color: #000; }
         .btn-cancel:hover { background: #e0e0e0; }
         .error-message { color: #d32f2f; font-size: 12px; margin-top: 4px; display: none; }
-        .admin-link { position: fixed; bottom: 20px; right: 20px; background: #000; color: #fff; padding: 12px 20px; border-radius: 6px; font-size: 13px; font-weight: 700; text-decoration: none; }
-        .admin-link:hover { background: #333; }
     </style>
 </head>
 <body>
@@ -99,108 +97,7 @@
 </div>
 
 <div class="container">
-    <div class="products-grid">
-        <!-- Product 1 -->
-        <div class="product-card" onclick="openCheckoutModal(1, 'Premium Wireless Earbuds', 599)">
-            <div style="position: relative;">
-                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80" alt="Product" class="product-image">
-                <div class="product-badge">TRENDING</div>
-            </div>
-            <div class="product-info">
-                <div class="product-name">Premium Wireless Earbuds</div>
-                <div class="product-desc">Noise cancellation. 24hrs battery.</div>
-                <div class="product-footer">
-                    <div class="product-price">₹599</div>
-                    <div class="stars">★★★★★</div>
-                </div>
-                <button class="add-btn" style="width: 100%; margin-top: 12px;" onclick="event.stopPropagation(); openCheckoutModal(1, 'Premium Wireless Earbuds', 599)">Add to Cart</button>
-            </div>
-        </div>
-
-        <!-- Product 2 -->
-        <div class="product-card" onclick="openCheckoutModal(2, 'Smart Watch Pro', 599)">
-            <div style="position: relative;">
-                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80" alt="Product" class="product-image">
-                <div class="product-badge">VIRAL</div>
-            </div>
-            <div class="product-info">
-                <div class="product-name">Smart Watch Pro</div>
-                <div class="product-desc">Heart rate monitor. 7-day battery.</div>
-                <div class="product-footer">
-                    <div class="product-price">₹599</div>
-                    <div class="stars">★★★★★</div>
-                </div>
-                <button class="add-btn" style="width: 100%; margin-top: 12px;" onclick="event.stopPropagation(); openCheckoutModal(2, 'Smart Watch Pro', 599)">Add to Cart</button>
-            </div>
-        </div>
-
-        <!-- Product 3 -->
-        <div class="product-card" onclick="openCheckoutModal(3, 'Portable Phone Charger', 599)">
-            <div style="position: relative;">
-                <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&q=80" alt="Product" class="product-image">
-                <div class="product-badge">VIRAL</div>
-            </div>
-            <div class="product-info">
-                <div class="product-name">Portable Phone Charger</div>
-                <div class="product-desc">20000mAh. Fast charging. Dual USB.</div>
-                <div class="product-footer">
-                    <div class="product-price">₹599</div>
-                    <div class="stars">★★★★★</div>
-                </div>
-                <button class="add-btn" style="width: 100%; margin-top: 12px;" onclick="event.stopPropagation(); openCheckoutModal(3, 'Portable Phone Charger', 599)">Add to Cart</button>
-            </div>
-        </div>
-
-        <!-- Product 4 -->
-        <div class="product-card" onclick="openCheckoutModal(4, 'Wireless Phone Stand', 599)">
-            <div style="position: relative;">
-                <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&q=80" alt="Product" class="product-image">
-                <div class="product-badge">NEW</div>
-            </div>
-            <div class="product-info">
-                <div class="product-name">Wireless Phone Stand</div>
-                <div class="product-desc">360° rotation. Non-slip grip.</div>
-                <div class="product-footer">
-                    <div class="product-price">₹599</div>
-                    <div class="stars">★★★★★</div>
-                </div>
-                <button class="add-btn" style="width: 100%; margin-top: 12px;" onclick="event.stopPropagation(); openCheckoutModal(4, 'Wireless Phone Stand', 599)">Add to Cart</button>
-            </div>
-        </div>
-
-        <!-- Product 5 -->
-        <div class="product-card" onclick="openCheckoutModal(5, 'USB-C Fast Charging Cable', 599)">
-            <div style="position: relative;">
-                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80" alt="Product" class="product-image">
-                <div class="product-badge">TRENDING</div>
-            </div>
-            <div class="product-info">
-                <div class="product-name">USB-C Fast Charging Cable</div>
-                <div class="product-desc">5ft. 100W charging. Braided.</div>
-                <div class="product-footer">
-                    <div class="product-price">₹599</div>
-                    <div class="stars">★★★★★</div>
-                </div>
-                <button class="add-btn" style="width: 100%; margin-top: 12px;" onclick="event.stopPropagation(); openCheckoutModal(5, 'USB-C Fast Charging Cable', 599)">Add to Cart</button>
-            </div>
-        </div>
-
-        <!-- Product 6 -->
-        <div class="product-card" onclick="openCheckoutModal(6, 'Bluetooth Speaker', 599)">
-            <div style="position: relative;">
-                <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80" alt="Product" class="product-image">
-                <div class="product-badge">VIRAL</div>
-            </div>
-            <div class="product-info">
-                <div class="product-name">Bluetooth Speaker</div>
-                <div class="product-desc">360° sound. Waterproof. 12-hr battery.</div>
-                <div class="product-footer">
-                    <div class="product-price">₹599</div>
-                    <div class="stars">★★★★★</div>
-                </div>
-                <button class="add-btn" style="width: 100%; margin-top: 12px;" onclick="event.stopPropagation(); openCheckoutModal(6, 'Bluetooth Speaker', 599)">Add to Cart</button>
-            </div>
-        </div>
+    <div class="products-grid" id="productsGrid">
     </div>
 </div>
 
@@ -274,11 +171,51 @@
     </div>
 </div>
 
-<a href="admin.html" class="admin-link">📊 Admin</a>
-
 <script src="https://checkout.razorpay.com/v1/checkout.js" async></script>
 <script>
 let currentProduct = { id: 0, name: '', price: 0 };
+let products = [];
+
+// Load products from localStorage
+function loadProducts() {
+    const stored = localStorage.getItem('instashop_products');
+    if (stored) {
+        products = JSON.parse(stored);
+    } else {
+        // Default products
+        products = [
+            { id: 1, name: 'Premium Wireless Earbuds', desc: 'Noise cancellation. 24hrs battery.', price: 599, badge: 'TRENDING', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80' },
+            { id: 2, name: 'Smart Watch Pro', desc: 'Heart rate monitor. 7-day battery.', price: 599, badge: 'VIRAL', image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80' },
+            { id: 3, name: 'Portable Phone Charger', desc: '20000mAh. Fast charging. Dual USB.', price: 599, badge: 'VIRAL', image: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&q=80' },
+            { id: 4, name: 'Wireless Phone Stand', desc: '360° rotation. Non-slip grip.', price: 599, badge: 'NEW', image: 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&q=80' },
+            { id: 5, name: 'USB-C Fast Charging Cable', desc: '5ft. 100W charging. Braided.', price: 599, badge: 'TRENDING', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80' },
+            { id: 6, name: 'Bluetooth Speaker', desc: '360° sound. Waterproof. 12-hr battery.', price: 599, badge: 'VIRAL', image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80' }
+        ];
+        localStorage.setItem('instashop_products', JSON.stringify(products));
+    }
+    displayProducts();
+}
+
+function displayProducts() {
+    const grid = document.getElementById('productsGrid');
+    grid.innerHTML = products.map(product => `
+        <div class="product-card">
+            <div style="position: relative;">
+                <img src="${product.image}" alt="${product.name}" class="product-image">
+                <div class="product-badge">${product.badge}</div>
+            </div>
+            <div class="product-info">
+                <div class="product-name">${product.name}</div>
+                <div class="product-desc">${product.desc}</div>
+                <div class="product-footer">
+                    <div class="product-price">₹${product.price}</div>
+                    <div class="stars">★★★★★</div>
+                </div>
+                <button class="buy-btn" onclick="openCheckoutModal(${product.id}, '${product.name}', ${product.price})">Buy Now</button>
+            </div>
+        </div>
+    `).join('');
+}
 
 function openCheckoutModal(productId, productName, price) {
     currentProduct = { id: productId, name: productName, price: price };
@@ -363,6 +300,9 @@ window.onclick = function(event) {
     const modal = document.getElementById('checkoutModal');
     if (event.target == modal) closeCheckoutModal();
 }
+
+// Load products on page load
+window.addEventListener('load', loadProducts);
 </script>
 
 </body>

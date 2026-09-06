@@ -13,11 +13,21 @@
         .header h1 { font-size: 28px; font-weight: 800; margin-bottom: 5px; }
         .header p { font-size: 14px; opacity: 0.8; }
         
+        .tabs { display: flex; gap: 10px; margin-bottom: 30px; border-bottom: 2px solid #e0e0e0; }
+        .tab { padding: 12px 20px; background: none; border: none; font-size: 14px; font-weight: 700; cursor: pointer; color: #999; border-bottom: 3px solid transparent; transition: all 0.2s; }
+        .tab.active { color: #000; border-bottom-color: #000; }
+        .tab:hover { color: #000; }
+        
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        /* Stats */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
         .stat-card { background: #fff; padding: 20px; border-radius: 8px; border-left: 4px solid #000; }
         .stat-value { font-size: 28px; font-weight: 800; }
         .stat-label { font-size: 13px; color: #999; margin-top: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
         
+        /* Controls */
         .controls { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
         .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 700; transition: background 0.2s; }
         .btn-primary { background: #000; color: #fff; }
@@ -29,6 +39,7 @@
         .btn-back { background: #f5f5f5; color: #000; border: 1px solid #ddd; }
         .btn-back:hover { background: #eee; }
         
+        /* Tables */
         .table-container { background: #fff; border-radius: 8px; overflow: auto; }
         table { width: 100%; border-collapse: collapse; }
         th { background: #f5f5f5; padding: 12px; text-align: left; font-weight: 700; border-bottom: 2px solid #e0e0e0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
@@ -38,10 +49,18 @@
         .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; }
         .status-pending { background: #fff3cd; color: #856404; }
         .status-completed { background: #d4edda; color: #155724; }
-        .status-failed { background: #f8d7da; color: #721c24; }
         
         .empty-state { text-align: center; padding: 60px 20px; color: #999; }
         
+        /* Forms */
+        .form-grid { display: grid; gap: 20px; max-width: 600px; }
+        .form-group { }
+        .form-group label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 6px; font-size: 14px; font-family: 'Inter', inherit; }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { outline: none; border-color: #000; }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        
+        /* Modal */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; }
         .modal.show { display: flex; }
         .modal-content { background: #fff; padding: 30px; border-radius: 10px; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; }
@@ -51,6 +70,8 @@
         .detail-value { font-size: 15px; margin-top: 5px; font-weight: 600; }
         .close-btn { float: right; cursor: pointer; font-size: 28px; font-weight: bold; color: #999; }
         .close-btn:hover { color: #000; }
+        
+        .product-thumb { width: 60px; height: 60px; object-fit: cover; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -58,54 +79,90 @@
 <div class="container">
     <div class="header">
         <h1>📊 instahype Admin Dashboard</h1>
-        <p>Manage and track all customer orders</p>
+        <p>Manage products and track customer orders</p>
     </div>
 
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-value" id="totalOrders">0</div>
-            <div class="stat-label">Total Orders</div>
+    <div class="tabs">
+        <button class="tab active" onclick="switchTab(this, 'orders')">📋 Orders</button>
+        <button class="tab" onclick="switchTab(this, 'products')">📦 Products</button>
+    </div>
+
+    <!-- ORDERS TAB -->
+    <div id="orders" class="tab-content active">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalOrders">0</div>
+                <div class="stat-label">Total Orders</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="completedOrders">0</div>
+                <div class="stat-label">Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="pendingOrders">0</div>
+                <div class="stat-label">Pending</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalRevenue">₹0</div>
+                <div class="stat-label">Total Revenue</div>
+            </div>
         </div>
-        <div class="stat-card">
-            <div class="stat-value" id="completedOrders">0</div>
-            <div class="stat-label">Completed</div>
+
+        <div class="controls">
+            <button class="btn btn-primary" onclick="loadOrders()">🔄 Refresh</button>
+            <button class="btn btn-primary" onclick="exportToCSV()">📥 Export CSV</button>
+            <button class="btn btn-danger" onclick="clearAllOrders()">🗑️ Clear Orders</button>
+            <button class="btn btn-back" onclick="window.location.href='index.html'">← Back to Store</button>
         </div>
-        <div class="stat-card">
-            <div class="stat-value" id="pendingOrders">0</div>
-            <div class="stat-label">Pending</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-value" id="totalRevenue">₹0</div>
-            <div class="stat-label">Total Revenue</div>
+
+        <div class="table-container">
+            <table id="ordersTable">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="ordersBody">
+                </tbody>
+            </table>
+            <div id="ordersEmpty" class="empty-state" style="display: none;">
+                <p>No orders yet. Start selling! 🚀</p>
+            </div>
         </div>
     </div>
 
-    <div class="controls">
-        <button class="btn btn-primary" onclick="loadOrders()">🔄 Refresh</button>
-        <button class="btn btn-primary" onclick="exportToCSV()">📥 Export CSV</button>
-        <button class="btn btn-danger" onclick="clearAllData()">🗑️ Clear Data</button>
-        <button class="btn btn-back" onclick="window.location.href='index.html'">← Back to Store</button>
-    </div>
+    <!-- PRODUCTS TAB -->
+    <div id="products" class="tab-content">
+        <div class="controls">
+            <button class="btn btn-primary" onclick="openAddProductModal()">➕ Add Product</button>
+            <button class="btn btn-secondary" onclick="loadProducts()">🔄 Refresh</button>
+        </div>
 
-    <div class="table-container">
-        <table id="ordersTable">
-            <thead>
-                <tr>
-                    <th>Order ID</th>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Status</th>
-                    <th>Date</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="ordersBody">
-            </tbody>
-        </table>
-        <div id="emptyState" class="empty-state" style="display: none;">
-            <p>No orders yet. Start selling! 🚀</p>
+        <div class="table-container">
+            <table id="productsTable">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Product Name</th>
+                        <th>Description</th>
+                        <th>Price</th>
+                        <th>Badge</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="productsBody">
+                </tbody>
+            </table>
+            <div id="productsEmpty" class="empty-state" style="display: none;">
+                <p>No products yet. Add one! ➕</p>
+            </div>
         </div>
     </div>
 </div>
@@ -120,7 +177,60 @@
     </div>
 </div>
 
+<!-- Add/Edit Product Modal -->
+<div id="productModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeProductModal()">&times;</span>
+        <div class="modal-header" id="productModalTitle">Add Product</div>
+        
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Product Name *</label>
+                <input type="text" id="prodName" required>
+            </div>
+            <div class="form-group">
+                <label>Description *</label>
+                <textarea id="prodDesc" required></textarea>
+            </div>
+            <div class="form-group">
+                <label>Price (₹) *</label>
+                <input type="number" id="prodPrice" required>
+            </div>
+            <div class="form-group">
+                <label>Badge</label>
+                <select id="prodBadge">
+                    <option value="TRENDING">TRENDING</option>
+                    <option value="VIRAL">VIRAL</option>
+                    <option value="NEW">NEW</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Image URL *</label>
+                <input type="text" id="prodImage" placeholder="https://example.com/image.jpg" required>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" onclick="saveProduct()" style="width: 100%;">Save Product</button>
+                <button class="btn btn-secondary" onclick="closeProductModal()" style="width: 100%; margin-top: 10px;">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
+let currentEditId = null;
+
+// Tab switching
+function switchTab(btn, tabName) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(tabName).classList.add('active');
+    
+    if (tabName === 'orders') loadOrders();
+    if (tabName === 'products') loadProducts();
+}
+
+// ORDERS
 function loadOrders() {
     const orders = JSON.parse(localStorage.getItem('instashop_orders') || '[]');
     updateStats(orders);
@@ -140,15 +250,15 @@ function updateStats(orders) {
 
 function displayOrders(orders) {
     const tbody = document.getElementById('ordersBody');
-    const emptyState = document.getElementById('emptyState');
+    const empty = document.getElementById('ordersEmpty');
 
     if (orders.length === 0) {
         tbody.innerHTML = '';
-        emptyState.style.display = 'block';
+        empty.style.display = 'block';
         return;
     }
 
-    emptyState.style.display = 'none';
+    empty.style.display = 'none';
     tbody.innerHTML = orders.map((order, index) => `
         <tr>
             <td><strong>#${String(index + 1).padStart(5, '0')}</strong></td>
@@ -156,15 +266,9 @@ function displayOrders(orders) {
             <td>${order.phone || '-'}</td>
             <td>${order.productName || '-'}</td>
             <td>₹${order.price || 0}</td>
-            <td>
-                <span class="status-badge status-${order.status || 'pending'}">
-                    ${order.status === 'completed' ? '✓ Completed' : order.status === 'failed' ? '✗ Failed' : '⏳ Pending'}
-                </span>
-            </td>
+            <td><span class="status-badge status-${order.status || 'pending'}">${order.status === 'completed' ? '✓ Completed' : '⏳ Pending'}</span></td>
             <td>${new Date(order.timestamp).toLocaleDateString('en-IN')}</td>
-            <td>
-                <button class="btn btn-secondary" onclick="viewOrderDetails(${index})">View</button>
-            </td>
+            <td><button class="btn btn-secondary" onclick="viewOrderDetails(${index})">View</button></td>
         </tr>
     `).join('');
 }
@@ -173,7 +277,7 @@ function viewOrderDetails(index) {
     const orders = JSON.parse(localStorage.getItem('instashop_orders') || '[]');
     const order = orders[index];
     
-    const detailsHtml = `
+    const html = `
         <div class="detail-item">
             <div class="detail-label">Order ID</div>
             <div class="detail-value">#${String(index + 1).padStart(5, '0')}</div>
@@ -207,20 +311,12 @@ function viewOrderDetails(index) {
             <div class="detail-value">${order.paymentId || 'Pending'}</div>
         </div>
         <div class="detail-item">
-            <div class="detail-label">Status</div>
-            <div class="detail-value">
-                <span class="status-badge status-${order.status}">
-                    ${order.status === 'completed' ? '✓ Completed' : order.status === 'failed' ? '✗ Failed' : '⏳ Pending'}
-                </span>
-            </div>
-        </div>
-        <div class="detail-item">
             <div class="detail-label">Date & Time</div>
             <div class="detail-value">${new Date(order.timestamp).toLocaleString('en-IN')}</div>
         </div>
     `;
     
-    document.getElementById('orderDetails').innerHTML = detailsHtml;
+    document.getElementById('orderDetails').innerHTML = html;
     document.getElementById('detailsModal').classList.add('show');
 }
 
@@ -238,20 +334,15 @@ function exportToCSV() {
     const headers = ['Order ID', 'Name', 'Phone', 'Email', 'Product', 'Price', 'Address', 'Status', 'Payment ID', 'Date'];
     const rows = orders.map((order, index) => [
         '#' + String(index + 1).padStart(5, '0'),
-        order.name,
-        order.phone,
-        order.email,
-        order.productName,
-        order.price,
-        order.address,
-        order.status,
+        order.name, order.phone, order.email, order.productName,
+        order.price, order.address, order.status,
         order.paymentId || '-',
         new Date(order.timestamp).toLocaleString('en-IN')
     ]);
 
     let csv = headers.join(',') + '\n';
     rows.forEach(row => {
-        csv += row.map(cell => '"' + (cell ? cell.toString().replace(/"/g, '""') : '') + '"').join(',') + '\n';
+        csv += row.map(cell => '"' + (cell || '').toString().replace(/"/g, '""') + '"').join(',') + '\n';
     });
 
     const link = document.createElement('a');
@@ -260,21 +351,114 @@ function exportToCSV() {
     link.click();
 }
 
-function clearAllData() {
-    if (confirm('⚠️ Are you sure? This cannot be undone!')) {
+function clearAllOrders() {
+    if (confirm('⚠️ Delete ALL orders? Cannot undo!')) {
         localStorage.removeItem('instashop_orders');
         loadOrders();
-        alert('All data cleared');
+        alert('All orders cleared');
     }
 }
 
+// PRODUCTS
+function loadProducts() {
+    const products = JSON.parse(localStorage.getItem('instashop_products') || '[]');
+    displayProducts(products);
+}
+
+function displayProducts(products) {
+    const tbody = document.getElementById('productsBody');
+    const empty = document.getElementById('productsEmpty');
+
+    if (products.length === 0) {
+        tbody.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+    }
+
+    empty.style.display = 'none';
+    tbody.innerHTML = products.map((p, idx) => `
+        <tr>
+            <td><img src="${p.image}" alt="${p.name}" class="product-thumb"></td>
+            <td>${p.name}</td>
+            <td>${p.desc}</td>
+            <td>₹${p.price}</td>
+            <td>${p.badge}</td>
+            <td>
+                <button class="btn btn-secondary" onclick="editProduct(${idx})">Edit</button>
+                <button class="btn btn-danger" onclick="deleteProduct(${idx})" style="margin-left: 5px;">Delete</button>
+            </td>
+        </tr>
+    `).join('');
+}
+
+function openAddProductModal() {
+    currentEditId = null;
+    document.getElementById('productModalTitle').innerText = 'Add Product';
+    document.getElementById('prodName').value = '';
+    document.getElementById('prodDesc').value = '';
+    document.getElementById('prodPrice').value = 599;
+    document.getElementById('prodBadge').value = 'TRENDING';
+    document.getElementById('prodImage').value = '';
+    document.getElementById('productModal').classList.add('show');
+}
+
+function editProduct(idx) {
+    const products = JSON.parse(localStorage.getItem('instashop_products') || '[]');
+    const p = products[idx];
+    currentEditId = idx;
+    document.getElementById('productModalTitle').innerText = 'Edit Product';
+    document.getElementById('prodName').value = p.name;
+    document.getElementById('prodDesc').value = p.desc;
+    document.getElementById('prodPrice').value = p.price;
+    document.getElementById('prodBadge').value = p.badge;
+    document.getElementById('prodImage').value = p.image;
+    document.getElementById('productModal').classList.add('show');
+}
+
+function saveProduct() {
+    const name = document.getElementById('prodName').value.trim();
+    const desc = document.getElementById('prodDesc').value.trim();
+    const price = parseInt(document.getElementById('prodPrice').value);
+    const badge = document.getElementById('prodBadge').value;
+    const image = document.getElementById('prodImage').value.trim();
+
+    if (!name || !desc || !price || !image) {
+        alert('All fields required');
+        return;
+    }
+
+    let products = JSON.parse(localStorage.getItem('instashop_products') || '[]');
+    
+    if (currentEditId !== null) {
+        products[currentEditId] = { id: products[currentEditId].id, name, desc, price, badge, image };
+    } else {
+        const id = Math.max(...products.map(p => p.id), 0) + 1;
+        products.push({ id, name, desc, price, badge, image });
+    }
+
+    localStorage.setItem('instashop_products', JSON.stringify(products));
+    closeProductModal();
+    loadProducts();
+}
+
+function deleteProduct(idx) {
+    if (!confirm('Delete this product?')) return;
+    let products = JSON.parse(localStorage.getItem('instashop_products') || '[]');
+    products.splice(idx, 1);
+    localStorage.setItem('instashop_products', JSON.stringify(products));
+    loadProducts();
+}
+
+function closeProductModal() {
+    document.getElementById('productModal').classList.remove('show');
+}
+
 window.onclick = function(event) {
-    const modal = document.getElementById('detailsModal');
-    if (event.target == modal) closeDetailsModal();
+    if (event.target.id === 'detailsModal') closeDetailsModal();
+    if (event.target.id === 'productModal') closeProductModal();
 }
 
 window.addEventListener('load', loadOrders);
-setInterval(loadOrders, 5000);
 </script>
 
 </body>

@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Viral Product Store</title>
+    <title>InstaShop - Viral Products Store</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f9f9f9; color: #333; }
         .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        h1 { text-align: center; font-size: 32px; margin-bottom: 30px; }
+        h1 { text-align: center; font-size: 32px; margin-bottom: 30px; color: #3399cc; }
         .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
         .product-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; }
         .product-card:hover { transform: translateY(-5px); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
@@ -20,12 +20,31 @@
         .buy-button { background: #3399cc; color: white; border: none; width: 100%; padding: 14px; font-size: 15px; font-weight: 600; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
         .buy-button:hover { background: #297ca5; }
         .buy-button:active { transform: scale(0.98); }
+        
+        /* Modal Styles */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
+        .modal.show { display: flex; align-items: center; justify-content: center; }
+        .modal-content { background-color: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+        .modal-header { font-size: 24px; font-weight: 700; margin-bottom: 20px; color: #333; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 5px; color: #333; }
+        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit; }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #3399cc; box-shadow: 0 0 5px rgba(51, 153, 204, 0.3); }
+        .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
+        .modal-buttons button { flex: 1; padding: 12px; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn-confirm { background: #3399cc; color: white; }
+        .btn-confirm:hover { background: #297ca5; }
+        .btn-cancel { background: #ddd; color: #333; }
+        .btn-cancel:hover { background: #ccc; }
+        .error-message { color: #d32f2f; font-size: 13px; margin-top: 5px; display: none; }
+        .success-message { color: #388e3c; font-size: 13px; margin-top: 5px; display: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Viral Products Store</h1>
+    <h1>🛍️ InstaShop - Viral Products</h1>
     
     <div class="products-grid">
         <!-- Product 1 -->
@@ -35,7 +54,7 @@
                 <div class="product-name">Premium Wireless Earbuds</div>
                 <div class="product-description">High quality sound with noise cancellation. 24 hrs battery life.</div>
                 <div class="product-price">₹599</div>
-                <button class="buy-button" onclick="buyProduct(1, 'Premium Wireless Earbuds')">Buy Now</button>
+                <button class="buy-button" onclick="openCheckoutModal(1, 'Premium Wireless Earbuds', 599)">Buy Now</button>
             </div>
         </div>
 
@@ -46,7 +65,7 @@
                 <div class="product-name">Smart Watch Pro</div>
                 <div class="product-description">Heart rate monitor, step counter, water resistant. 7-day battery.</div>
                 <div class="product-price">₹599</div>
-                <button class="buy-button" onclick="buyProduct(2, 'Smart Watch Pro')">Buy Now</button>
+                <button class="buy-button" onclick="openCheckoutModal(2, 'Smart Watch Pro', 599)">Buy Now</button>
             </div>
         </div>
 
@@ -57,7 +76,7 @@
                 <div class="product-name">Portable Phone Charger</div>
                 <div class="product-description">20000mAh capacity. Fast charging. Dual USB ports.</div>
                 <div class="product-price">₹599</div>
-                <button class="buy-button" onclick="buyProduct(3, 'Portable Phone Charger')">Buy Now</button>
+                <button class="buy-button" onclick="openCheckoutModal(3, 'Portable Phone Charger', 599)">Buy Now</button>
             </div>
         </div>
 
@@ -68,30 +87,151 @@
                 <div class="product-name">Wireless Phone Stand</div>
                 <div class="product-description">360° rotation. Adjustable height. Non-slip grip.</div>
                 <div class="product-price">₹599</div>
-                <button class="buy-button" onclick="buyProduct(4, 'Wireless Phone Stand')">Buy Now</button>
+                <button class="buy-button" onclick="openCheckoutModal(4, 'Wireless Phone Stand', 599)">Buy Now</button>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Checkout Modal -->
+<div id="checkoutModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">Checkout - <span id="productNameDisplay"></span></div>
+        
+        <form id="checkoutForm">
+            <div class="form-group">
+                <label for="name">Full Name *</label>
+                <input type="text" id="name" name="name" required>
+                <div class="error-message" id="nameError">Name is required</div>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number *</label>
+                <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" placeholder="10 digit number" required>
+                <div class="error-message" id="phoneError">Valid 10-digit phone number required</div>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address *</label>
+                <textarea id="address" name="address" required placeholder="Street, City, State, PIN Code"></textarea>
+                <div class="error-message" id="addressError">Address is required</div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email (Optional)</label>
+                <input type="email" id="email" name="email">
+            </div>
+
+            <div class="modal-buttons">
+                <button type="button" class="btn-cancel" onclick="closeCheckoutModal()">Cancel</button>
+                <button type="button" class="btn-confirm" onclick="validateAndPay()">Proceed to Payment</button>
+            </div>
+
+            <div class="success-message" id="successMessage">Order saved successfully!</div>
+        </form>
+    </div>
+</div>
+
 <script src="https://checkout.razorpay.com/v1/checkout.js" async></script>
 <script>
-function buyProduct(productId, productName) {
+let currentProduct = { id: 0, name: '', price: 0 };
+let currentOrder = {};
+
+function openCheckoutModal(productId, productName, price) {
+    currentProduct = { id: productId, name: productName, price: price };
+    document.getElementById('productNameDisplay').innerText = productName;
+    document.getElementById('checkoutForm').reset();
+    document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+    document.getElementById('checkoutModal').classList.add('show');
+}
+
+function closeCheckoutModal() {
+    document.getElementById('checkoutModal').classList.remove('show');
+}
+
+function validateAndPay() {
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+    const address = document.getElementById('address').value.trim();
+    const email = document.getElementById('email').value.trim();
+
+    let isValid = true;
+
+    if (!name) {
+        document.getElementById('nameError').style.display = 'block';
+        isValid = false;
+    } else {
+        document.getElementById('nameError').style.display = 'none';
+    }
+
+    if (!phone || !/^[0-9]{10}$/.test(phone)) {
+        document.getElementById('phoneError').style.display = 'block';
+        isValid = false;
+    } else {
+        document.getElementById('phoneError').style.display = 'none';
+    }
+
+    if (!address) {
+        document.getElementById('addressError').style.display = 'block';
+        isValid = false;
+    } else {
+        document.getElementById('addressError').style.display = 'none';
+    }
+
+    if (!isValid) return;
+
+    // Save order to database
+    currentOrder = {
+        productId: currentProduct.id,
+        productName: currentProduct.name,
+        price: currentProduct.price,
+        name: name,
+        phone: phone,
+        address: address,
+        email: email,
+        timestamp: new Date().toISOString(),
+        status: 'pending'
+    };
+
+    // Save to localStorage (client-side) and send to server
+    saveOrderToDatabase(currentOrder);
+
+    // Proceed to Razorpay payment
+    initiateRazorpayPayment(name, phone, email);
+}
+
+function saveOrderToDatabase(order) {
+    // Save to localStorage for demo
+    let orders = JSON.parse(localStorage.getItem('instashop_orders') || '[]');
+    orders.push(order);
+    localStorage.setItem('instashop_orders', JSON.stringify(orders));
+
+    // Send to server (you'll create a backend for this)
+    fetch('/api/orders', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(order)
+    }).catch(err => console.log('Note: Backend not configured yet'));
+}
+
+function initiateRazorpayPayment(name, phone, email) {
     var options = {
         "key": "rzp_live_TYeDq9qlSgoN3G",
-        "amount": "59900",
+        "amount": currentProduct.price * 100,
         "currency": "INR",
-        "name": "Your Store Name",
-        "description": productName + " - Purchase",
+        "name": "InstaShop",
+        "description": currentProduct.name + " - Purchase",
         "image": "https://yourstore.com/logo.png",
-        "handler": function (response){
-            alert("Payment Successful! Order ID: " + response.razorpay_payment_id);
-            window.location.href = "/thank-you.html?order=" + response.razorpay_payment_id + "&product=" + productName;
-        },
         "prefill": {
-            "name": "",
-            "email": "",
-            "contact": ""
+            "name": name,
+            "email": email,
+            "contact": phone
+        },
+        "handler": function (response) {
+            updateOrderPaymentStatus(response.razorpay_payment_id);
+            alert("Payment Successful! Order ID: " + response.razorpay_payment_id);
+            closeCheckoutModal();
+            window.location.href = "/thank-you.html?order=" + response.razorpay_payment_id + "&product=" + currentProduct.name;
         },
         "theme": {
             "color": "#3399cc"
@@ -99,6 +239,30 @@ function buyProduct(productId, productName) {
     };
     var rzp1 = new Razorpay(options);
     rzp1.open();
+}
+
+function updateOrderPaymentStatus(paymentId) {
+    let orders = JSON.parse(localStorage.getItem('instashop_orders') || '[]');
+    if (orders.length > 0) {
+        orders[orders.length - 1].status = 'completed';
+        orders[orders.length - 1].paymentId = paymentId;
+        localStorage.setItem('instashop_orders', JSON.stringify(orders));
+    }
+
+    // Send update to server
+    fetch('/api/orders/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ paymentId: paymentId, status: 'completed' })
+    }).catch(err => console.log('Note: Backend not configured yet'));
+}
+
+// Close modal when clicking outside
+window.onclick = function(event) {
+    const modal = document.getElementById('checkoutModal');
+    if (event.target == modal) {
+        closeCheckoutModal();
+    }
 }
 </script>
 

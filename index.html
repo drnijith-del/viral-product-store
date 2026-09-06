@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viral Product Store</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f9f9f9; color: #333; }
+        .container { max-width: 400px; margin: 0 auto; background: white; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+        img { width: 100%; border-radius: 8px; object-fit: cover; margin-bottom: 15px; }
+        h1 { font-size: 24px; font-weight: 600; margin-bottom: 8px; }
+        .price { font-size: 28px; color: #222; font-weight: 700; margin-bottom: 10px; }
+        p { font-size: 14px; color: #666; line-height: 1.6; margin-bottom: 20px; }
+        button { background: #3399cc; color: white; border: none; width: 100%; padding: 16px; font-size: 16px; font-weight: 600; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
+        button:hover { background: #297ca5; }
+        button:active { transform: scale(0.98); }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80" alt="Viral Product" loading="lazy">
+    
+    <h1>Amazing Viral Product</h1>
+    <div class="price">₹499</div>
+    <p>This is the viral product you saw on Instagram. Limited stock available. Get yours today with free shipping!</p>
+    
+    <button id="rzp-button">Buy Now (UPI / Card)</button>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js" async></script>
+<script>
+document.getElementById('rzp-button').onclick = function(e){
+    var options = {
+        "key": "YOUR_RAZORPAY_KEY_ID",
+        "amount": "49900",
+        "currency": "INR",
+        "name": "Your Store Name",
+        "description": "Viral Product Purchase",
+        "image": "https://yourstore.com/logo.png",
+        "handler": function (response){
+            alert("Payment Successful! Order ID: " + response.razorpay_payment_id);
+            window.location.href = "/thank-you.html";
+        },
+        "prefill": {
+            "name": "",
+            "email": "",
+            "contact": ""
+        },
+        "theme": {
+            "color": "#3399cc"
+        }
+    };
+    var rzp1 = new Razorpay(options);
+    rzp1.open();
+    e.preventDefault();
+}
+</script>
+
+</body>
+</html>

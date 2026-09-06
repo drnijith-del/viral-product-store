@@ -72,6 +72,20 @@
         .close-btn:hover { color: #000; }
         
         .product-thumb { width: 60px; height: 60px; object-fit: cover; border-radius: 4px; }
+        
+        /* Zapier Status */
+        .zapier-section { background: #f0f7ff; border-left: 4px solid #0066cc; padding: 15px; border-radius: 6px; margin-bottom: 20px; }
+        .zapier-section h3 { font-size: 14px; font-weight: 700; margin-bottom: 8px; color: #0066cc; }
+        .zapier-section p { font-size: 13px; color: #333; margin-bottom: 8px; }
+        .zapier-status { font-size: 12px; font-weight: 700; padding: 6px 12px; border-radius: 4px; display: inline-block; }
+        .zapier-active { background: #d4edda; color: #155724; }
+        .zapier-inactive { background: #fff3cd; color: #856404; }
+        
+        .sync-indicator { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; animation: pulse 2s infinite; }
+        .sync-indicator.active { background: #28a745; }
+        .sync-indicator.inactive { background: #999; }
+        
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
     </style>
 </head>
 <body>
@@ -85,6 +99,47 @@
     <div class="tabs">
         <button class="tab active" onclick="switchTab(this, 'orders')">📋 Orders</button>
         <button class="tab" onclick="switchTab(this, 'products')">📦 Products</button>
+        <button class="tab" onclick="switchTab(this, 'zapier')">🔗 Zapier Setup</button>
+    </div>
+
+    <!-- ZAPIER SETUP TAB -->
+    <div id="zapier" class="tab-content">
+        <div class="zapier-section">
+            <h3>🔗 Google Sheets Sync via Zapier</h3>
+            <p><strong>Status:</strong> <span class="sync-indicator" id="zapierIndicator"></span> <span class="zapier-status" id="zapierStatus">Not Configured</span></p>
+            
+            <div style="margin-top: 20px; padding: 20px; background: #fff; border-radius: 6px;">
+                <label style="display: block; font-weight: 700; margin-bottom: 10px; font-size: 13px; text-transform: uppercase;">Zapier Webhook URL</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="webhookUrl" placeholder="Paste your Zapier webhook URL here" style="flex: 1; padding: 10px; border: 1px solid #e0e0e0; border-radius: 6px; font-size: 13px;">
+                    <button class="btn btn-primary" onclick="saveWebhookUrl()">Save</button>
+                </div>
+                <p style="font-size: 12px; color: #666; margin-top: 10px;">Get webhook URL: <strong>zapier.com</strong> → Create Zap → "Webhooks by Zapier" (Trigger) → "Google Sheets" (Action)</p>
+            </div>
+
+            <div style="margin-top: 20px; padding: 20px; background: #fff; border-radius: 6px;">
+                <h4 style="font-size: 13px; font-weight: 700; margin-bottom: 15px;">📋 Setup Instructions</h4>
+                <ol style="font-size: 13px; line-height: 1.8; color: #333; margin-left: 20px;">
+                    <li><strong>Go to</strong> <a href="https://zapier.com" target="_blank" style="color: #0066cc; font-weight: 700;">zapier.com</a> and sign up (free)</li>
+                    <li><strong>Create a new Zap</strong> → Click "Create Zap"</li>
+                    <li><strong>Trigger:</strong> Search "Webhooks by Zapier" → Select "Catch Hook"</li>
+                    <li><strong>Copy the Webhook URL</strong> that appears</li>
+                    <li><strong>Action:</strong> Search "Google Sheets" → "Create Spreadsheet Row"</li>
+                    <li><strong>Connect</strong> your Google Account</li>
+                    <li><strong>Select/Create Spreadsheet:</strong> Name it "instahype-products"</li>
+                    <li><strong>Map fields:</strong> name, desc, price, badge, image</li>
+                    <li><strong>Publish</strong> the Zap</li>
+                    <li><strong>Paste the Webhook URL</strong> in the box above and click Save</li>
+                    <li><strong>Every time you add a product, it auto-syncs to Google Sheets!</strong> ✨</li>
+                </ol>
+            </div>
+
+            <div style="margin-top: 20px; padding: 20px; background: #fff; border-radius: 6px;">
+                <h4 style="font-size: 13px; font-weight: 700; margin-bottom: 10px;">📌 Test Webhook</h4>
+                <button class="btn btn-secondary" onclick="testWebhook()">Send Test Data to Sheets</button>
+                <p style="font-size: 12px; color: #666; margin-top: 10px;">Click to verify your webhook is working. Check your Google Sheet!</p>
+            </div>
+        </div>
     </div>
 
     <!-- ORDERS TAB -->
@@ -219,6 +274,81 @@
 <script>
 let currentEditId = null;
 
+// Zapier Functions
+function getWebhookUrl() {
+    return localStorage.getItem('zapier_webhook_url') || '';
+}
+
+function saveWebhookUrl() {
+    const url = document.getElementById('webhookUrl').value.trim();
+    if (!url) {
+        alert('Please paste your Zapier webhook URL');
+        return;
+    }
+    localStorage.setItem('zapier_webhook_url', url);
+    updateZapierStatus();
+    alert('✅ Webhook URL saved! Products will now sync to Google Sheets.');
+}
+
+function updateZapierStatus() {
+    const url = getWebhookUrl();
+    const indicator = document.getElementById('zapierIndicator');
+    const status = document.getElementById('zapierStatus');
+    
+    if (url) {
+        indicator.className = 'sync-indicator active';
+        status.className = 'zapier-status zapier-active';
+        status.innerText = '✓ Active - Syncing to Google Sheets';
+    } else {
+        indicator.className = 'sync-indicator inactive';
+        status.className = 'zapier-status zapier-inactive';
+        status.innerText = '⚠ Not Configured';
+    }
+    
+    document.getElementById('webhookUrl').value = url;
+}
+
+function sendToZapier(productData) {
+    const webhookUrl = getWebhookUrl();
+    if (!webhookUrl) return; // Silent fail if not configured
+    
+    fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            name: productData.name,
+            desc: productData.desc,
+            price: productData.price,
+            badge: productData.badge,
+            image: productData.image,
+            timestamp: new Date().toISOString()
+        })
+    }).catch(err => console.log('Zapier sync:', err));
+}
+
+function testWebhook() {
+    const webhookUrl = getWebhookUrl();
+    if (!webhookUrl) {
+        alert('❌ No webhook URL configured. Set it up first!');
+        return;
+    }
+    
+    fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            name: '🧪 Test Product',
+            desc: 'This is a test product to verify Zapier sync',
+            price: 999,
+            badge: 'TEST',
+            image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400',
+            timestamp: new Date().toISOString()
+        })
+    })
+    .then(r => alert('✅ Test data sent! Check your Google Sheet in 5-10 seconds.'))
+    .catch(err => alert('❌ Error: ' + err));
+}
+
 // Tab switching
 function switchTab(btn, tabName) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -228,6 +358,7 @@ function switchTab(btn, tabName) {
     
     if (tabName === 'orders') loadOrders();
     if (tabName === 'products') loadProducts();
+    if (tabName === 'zapier') updateZapierStatus();
 }
 
 // ORDERS
@@ -437,8 +568,13 @@ function saveProduct() {
     }
 
     localStorage.setItem('instashop_products', JSON.stringify(products));
+    
+    // Send to Zapier
+    sendToZapier({ name, desc, price, badge, image });
+    
     closeProductModal();
     loadProducts();
+    alert('✅ Product saved!' + (getWebhookUrl() ? ' Syncing to Google Sheets...' : ''));
 }
 
 function deleteProduct(idx) {
@@ -458,7 +594,10 @@ window.onclick = function(event) {
     if (event.target.id === 'productModal') closeProductModal();
 }
 
-window.addEventListener('load', loadOrders);
+window.addEventListener('load', () => {
+    loadOrders();
+    updateZapierStatus();
+});
 </script>
 
 </body>

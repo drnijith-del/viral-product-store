@@ -3,149 +3,266 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InstaShop - Viral Products Store</title>
+    <title>instahype - Viral Products Worth the Hype</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f9f9f9; color: #333; }
-        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        h1 { text-align: center; font-size: 32px; color: #3399cc; flex: 1; }
-        .admin-link { background: #3399cc; color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600; }
-        .admin-link:hover { background: #297ca5; }
-        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
-        .product-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; }
-        .product-card:hover { transform: translateY(-5px); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
-        .product-image { width: 100%; height: 250px; object-fit: cover; }
-        .product-info { padding: 15px; }
-        .product-name { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
-        .product-description { font-size: 13px; color: #666; margin-bottom: 10px; line-height: 1.4; }
-        .product-price { font-size: 24px; font-weight: 700; color: #222; margin-bottom: 12px; }
-        .buy-button { background: #3399cc; color: white; border: none; width: 100%; padding: 14px; font-size: 15px; font-weight: 600; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
-        .buy-button:hover { background: #297ca5; }
-        .buy-button:active { transform: scale(0.98); }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #fff; color: #000; }
+        a { text-decoration: none; color: inherit; }
         
-        /* Modal Styles */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); }
+        /* Navigation */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 40px; border-bottom: 1px solid #f5f5f5; }
+        .logo { font-size: 24px; font-weight: 800; letter-spacing: -1px; }
+        .nav-links { display: flex; gap: 30px; font-size: 14px; font-weight: 600; }
+        .cart-icon { font-size: 20px; cursor: pointer; }
+        
+        /* Hero Section */
+        .hero { text-align: center; padding: 80px 40px; max-width: 1000px; margin: 0 auto; }
+        .hero h1 { font-size: 56px; font-weight: 800; margin-bottom: 16px; line-height: 1.2; }
+        .hero p { font-size: 18px; color: #666; margin-bottom: 40px; line-height: 1.6; }
+        .cta-button { background: #000; color: #fff; padding: 16px 40px; border: none; border-radius: 8px; font-size: 15px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+        .cta-button:hover { background: #333; }
+        
+        /* Section Title */
+        .section-title { text-align: center; margin: 60px 40px 40px; }
+        .section-title h2 { font-size: 36px; font-weight: 800; margin-bottom: 10px; }
+        .section-title p { font-size: 16px; color: #666; }
+        
+        /* Products Grid */
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; margin: 40px 0; }
+        .product-card { background: #fff; border: 1px solid #f5f5f5; border-radius: 8px; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; cursor: pointer; }
+        .product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+        .product-image { width: 100%; height: 240px; object-fit: cover; background: #f5f5f5; }
+        .product-badge { position: absolute; top: 12px; right: 12px; background: #000; color: #fff; padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+        .product-info { padding: 16px; }
+        .product-name { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+        .product-desc { font-size: 13px; color: #999; margin-bottom: 12px; line-height: 1.4; }
+        .product-footer { display: flex; justify-content: space-between; align-items: center; }
+        .product-price { font-size: 18px; font-weight: 800; }
+        .stars { font-size: 12px; color: #ffc107; }
+        .add-btn { background: #000; color: #fff; border: none; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+        .add-btn:hover { background: #333; }
+        
+        /* Why Section */
+        .why-section { background: #f5f5f5; padding: 80px 40px; margin-top: 60px; }
+        .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; max-width: 1000px; margin: 40px auto; }
+        .why-card { text-align: center; }
+        .why-icon { font-size: 36px; margin-bottom: 16px; }
+        .why-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+        .why-card p { font-size: 14px; color: #666; line-height: 1.6; }
+        
+        /* Footer */
+        footer { background: #000; color: #fff; padding: 40px; text-align: center; font-size: 14px; }
+        
+        /* Modal */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); }
         .modal.show { display: flex; align-items: center; justify-content: center; }
-        .modal-content { background-color: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 500px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
-        .modal-header { font-size: 24px; font-weight: 700; margin-bottom: 20px; color: #333; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; font-size: 14px; font-weight: 600; margin-bottom: 5px; color: #333; }
-        .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; font-family: inherit; }
+        .modal-content { background: #fff; padding: 40px; border-radius: 12px; width: 90%; max-width: 500px; }
+        .modal-header { font-size: 24px; font-weight: 800; margin-bottom: 24px; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #e0e0e0; border-radius: 6px; font-size: 14px; font-family: 'Inter', inherit; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #000; }
         .form-group textarea { resize: vertical; min-height: 80px; }
-        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #3399cc; box-shadow: 0 0 5px rgba(51, 153, 204, 0.3); }
-        .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
-        .modal-buttons button { flex: 1; padding: 12px; border: none; border-radius: 6px; font-size: 15px; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-        .btn-confirm { background: #3399cc; color: white; }
-        .btn-confirm:hover { background: #297ca5; }
-        .btn-cancel { background: #ddd; color: #333; }
-        .btn-cancel:hover { background: #ccc; }
-        .error-message { color: #d32f2f; font-size: 13px; margin-top: 5px; display: none; }
+        .modal-buttons { display: flex; gap: 12px; margin-top: 24px; }
+        .modal-buttons button { flex: 1; padding: 12px; border: none; border-radius: 6px; font-size: 14px; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+        .btn-confirm { background: #000; color: #fff; }
+        .btn-confirm:hover { background: #333; }
+        .btn-cancel { background: #f5f5f5; color: #000; }
+        .btn-cancel:hover { background: #e0e0e0; }
+        .error-message { color: #d32f2f; font-size: 12px; margin-top: 4px; display: none; }
+        .admin-link { position: fixed; bottom: 20px; right: 20px; background: #000; color: #fff; padding: 12px 20px; border-radius: 6px; font-size: 13px; font-weight: 700; text-decoration: none; }
+        .admin-link:hover { background: #333; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="header">
-        <h1>🛍️ InstaShop - Viral Products</h1>
-        <a href="admin.html" class="admin-link">📊 Admin Dashboard</a>
+<nav>
+    <div class="logo">instahype</div>
+    <div class="nav-links">
+        <a href="#">Shop</a>
+        <a href="#">Trending</a>
+        <a href="#">About</a>
     </div>
-    
+    <div class="cart-icon">🛒</div>
+</nav>
+
+<div class="hero">
+    <h1>Worth the hype.</h1>
+    <p>Discover trending products. Interesting finds. All in one place.</p>
+    <button class="cta-button" onclick="document.querySelector('.products-grid').scrollIntoView({behavior: 'smooth'})">Shop Viral Finds</button>
+</div>
+
+<div class="section-title">
+    <h2>What's everyone buying?</h2>
+    <p>Trending products getting attention right now.</p>
+</div>
+
+<div class="container">
     <div class="products-grid">
         <!-- Product 1 -->
-        <div class="product-card">
-            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80" alt="Product 1" class="product-image">
+        <div class="product-card" onclick="openCheckoutModal(1, 'Premium Wireless Earbuds', 599)">
+            <div style="position: relative;">
+                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80" alt="Product" class="product-image">
+                <div class="product-badge">TRENDING</div>
+            </div>
             <div class="product-info">
                 <div class="product-name">Premium Wireless Earbuds</div>
-                <div class="product-description">High quality sound with noise cancellation. 24 hrs battery life.</div>
-                <div class="product-price">₹599</div>
-                <button class="buy-button" onclick="openCheckoutModal(1, 'Premium Wireless Earbuds', 599)">Buy Now</button>
+                <div class="product-desc">Noise cancellation. 24hrs battery.</div>
+                <div class="product-footer">
+                    <div class="product-price">₹599</div>
+                    <div class="stars">★★★★★</div>
+                </div>
+                <button class="add-btn" style="width: 100%; margin-top: 12px;" onclick="event.stopPropagation(); openCheckoutModal(1, 'Premium Wireless Earbuds', 599)">Add to Cart</button>
             </div>
         </div>
 
         <!-- Product 2 -->
-        <div class="product-card">
-            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80" alt="Product 2" class="product-image">
+        <div class="product-card" onclick="openCheckoutModal(2, 'Smart Watch Pro', 599)">
+            <div style="position: relative;">
+                <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80" alt="Product" class="product-image">
+                <div class="product-badge">VIRAL</div>
+            </div>
             <div class="product-info">
                 <div class="product-name">Smart Watch Pro</div>
-                <div class="product-description">Heart rate monitor, step counter, water resistant. 7-day battery.</div>
-                <div class="product-price">₹599</div>
-                <button class="buy-button" onclick="openCheckoutModal(2, 'Smart Watch Pro', 599)">Buy Now</button>
+                <div class="product-desc">Heart rate monitor. 7-day battery.</div>
+                <div class="product-footer">
+                    <div class="product-price">₹599</div>
+                    <div class="stars">★★★★★</div>
+                </div>
+                <button class="add-btn" style="width: 100%; margin-top: 12px;" onclick="event.stopPropagation(); openCheckoutModal(2, 'Smart Watch Pro', 599)">Add to Cart</button>
             </div>
         </div>
 
         <!-- Product 3 -->
-        <div class="product-card">
-            <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&q=80" alt="Product 3" class="product-image">
+        <div class="product-card" onclick="openCheckoutModal(3, 'Portable Phone Charger', 599)">
+            <div style="position: relative;">
+                <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&q=80" alt="Product" class="product-image">
+                <div class="product-badge">VIRAL</div>
+            </div>
             <div class="product-info">
                 <div class="product-name">Portable Phone Charger</div>
-                <div class="product-description">20000mAh capacity. Fast charging. Dual USB ports.</div>
-                <div class="product-price">₹599</div>
-                <button class="buy-button" onclick="openCheckoutModal(3, 'Portable Phone Charger', 599)">Buy Now</button>
+                <div class="product-desc">20000mAh. Fast charging. Dual USB.</div>
+                <div class="product-footer">
+                    <div class="product-price">₹599</div>
+                    <div class="stars">★★★★★</div>
+                </div>
+                <button class="add-btn" style="width: 100%; margin-top: 12px;" onclick="event.stopPropagation(); openCheckoutModal(3, 'Portable Phone Charger', 599)">Add to Cart</button>
             </div>
         </div>
 
         <!-- Product 4 -->
-        <div class="product-card">
-            <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&q=80" alt="Product 4" class="product-image">
+        <div class="product-card" onclick="openCheckoutModal(4, 'Wireless Phone Stand', 599)">
+            <div style="position: relative;">
+                <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&q=80" alt="Product" class="product-image">
+                <div class="product-badge">NEW</div>
+            </div>
             <div class="product-info">
                 <div class="product-name">Wireless Phone Stand</div>
-                <div class="product-description">360° rotation. Adjustable height. Non-slip grip.</div>
-                <div class="product-price">₹599</div>
-                <button class="buy-button" onclick="openCheckoutModal(4, 'Wireless Phone Stand', 599)">Buy Now</button>
+                <div class="product-desc">360° rotation. Non-slip grip.</div>
+                <div class="product-footer">
+                    <div class="product-price">₹599</div>
+                    <div class="stars">★★★★★</div>
+                </div>
+                <button class="add-btn" style="width: 100%; margin-top: 12px;" onclick="event.stopPropagation(); openCheckoutModal(4, 'Wireless Phone Stand', 599)">Add to Cart</button>
             </div>
         </div>
 
         <!-- Product 5 -->
-        <div class="product-card">
-            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80" alt="Product 5" class="product-image">
+        <div class="product-card" onclick="openCheckoutModal(5, 'USB-C Fast Charging Cable', 599)">
+            <div style="position: relative;">
+                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80" alt="Product" class="product-image">
+                <div class="product-badge">TRENDING</div>
+            </div>
             <div class="product-info">
                 <div class="product-name">USB-C Fast Charging Cable</div>
-                <div class="product-description">5ft durable cable. 100W fast charging. Braided design.</div>
-                <div class="product-price">₹599</div>
-                <button class="buy-button" onclick="openCheckoutModal(5, 'USB-C Fast Charging Cable', 599)">Buy Now</button>
+                <div class="product-desc">5ft. 100W charging. Braided.</div>
+                <div class="product-footer">
+                    <div class="product-price">₹599</div>
+                    <div class="stars">★★★★★</div>
+                </div>
+                <button class="add-btn" style="width: 100%; margin-top: 12px;" onclick="event.stopPropagation(); openCheckoutModal(5, 'USB-C Fast Charging Cable', 599)">Add to Cart</button>
             </div>
         </div>
 
         <!-- Product 6 -->
-        <div class="product-card">
-            <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80" alt="Product 6" class="product-image">
+        <div class="product-card" onclick="openCheckoutModal(6, 'Bluetooth Speaker', 599)">
+            <div style="position: relative;">
+                <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&q=80" alt="Product" class="product-image">
+                <div class="product-badge">VIRAL</div>
+            </div>
             <div class="product-info">
                 <div class="product-name">Bluetooth Speaker</div>
-                <div class="product-description">360° surround sound. Waterproof. 12-hour battery.</div>
-                <div class="product-price">₹599</div>
-                <button class="buy-button" onclick="openCheckoutModal(6, 'Bluetooth Speaker', 599)">Buy Now</button>
+                <div class="product-desc">360° sound. Waterproof. 12-hr battery.</div>
+                <div class="product-footer">
+                    <div class="product-price">₹599</div>
+                    <div class="stars">★★★★★</div>
+                </div>
+                <button class="add-btn" style="width: 100%; margin-top: 12px;" onclick="event.stopPropagation(); openCheckoutModal(6, 'Bluetooth Speaker', 599)">Add to Cart</button>
             </div>
         </div>
     </div>
 </div>
 
+<div class="why-section">
+    <div class="section-title">
+        <h2>Why people love instahype</h2>
+    </div>
+    <div class="why-grid">
+        <div class="why-card">
+            <div class="why-icon">🔍</div>
+            <h3>Discover</h3>
+            <p>Find products you wouldn't normally come across.</p>
+        </div>
+        <div class="why-card">
+            <div class="why-icon">🔥</div>
+            <h3>Trending</h3>
+            <p>See what's getting attention right now.</p>
+        </div>
+        <div class="why-card">
+            <div class="why-icon">✨</div>
+            <h3>Simple</h3>
+            <p>No complicated shopping experience.</p>
+        </div>
+        <div class="why-card">
+            <div class="why-icon">🎉</div>
+            <h3>Fun</h3>
+            <p>Because finding something cool should be exciting.</p>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>instahype © 2026 | Worth the hype.</p>
+    <p style="margin-top: 12px; color: #999;">Viral products. Interesting finds. Simple shopping.</p>
+</footer>
+
 <!-- Checkout Modal -->
 <div id="checkoutModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header">Checkout - <span id="productNameDisplay"></span></div>
+        <div class="modal-header">Complete Your Order</div>
         
         <form id="checkoutForm">
             <div class="form-group">
-                <label for="name">Full Name *</label>
+                <label>Full Name *</label>
                 <input type="text" id="name" name="name" required>
                 <div class="error-message" id="nameError">Name is required</div>
             </div>
 
             <div class="form-group">
-                <label for="phone">Phone Number *</label>
+                <label>Phone Number *</label>
                 <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" placeholder="10 digit number" required>
-                <div class="error-message" id="phoneError">Valid 10-digit phone number required</div>
+                <div class="error-message" id="phoneError">Valid 10-digit phone required</div>
             </div>
 
             <div class="form-group">
-                <label for="address">Address *</label>
+                <label>Address *</label>
                 <textarea id="address" name="address" required placeholder="Street, City, State, PIN Code"></textarea>
                 <div class="error-message" id="addressError">Address is required</div>
             </div>
 
             <div class="form-group">
-                <label for="email">Email (Optional)</label>
+                <label>Email (Optional)</label>
                 <input type="email" id="email" name="email">
             </div>
 
@@ -157,14 +274,14 @@
     </div>
 </div>
 
+<a href="admin.html" class="admin-link">📊 Admin</a>
+
 <script src="https://checkout.razorpay.com/v1/checkout.js" async></script>
 <script>
 let currentProduct = { id: 0, name: '', price: 0 };
-let currentOrder = {};
 
 function openCheckoutModal(productId, productName, price) {
     currentProduct = { id: productId, name: productName, price: price };
-    document.getElementById('productNameDisplay').innerText = productName;
     document.getElementById('checkoutForm').reset();
     document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
     document.getElementById('checkoutModal').classList.add('show');
@@ -205,7 +322,7 @@ function validateAndPay() {
 
     if (!isValid) return;
 
-    currentOrder = {
+    const order = {
         productId: currentProduct.id,
         productName: currentProduct.name,
         price: currentProduct.price,
@@ -217,57 +334,34 @@ function validateAndPay() {
         status: 'pending'
     };
 
-    saveOrderToDatabase(currentOrder);
-    initiateRazorpayPayment(name, phone, email);
-}
-
-function saveOrderToDatabase(order) {
     let orders = JSON.parse(localStorage.getItem('instashop_orders') || '[]');
     orders.push(order);
     localStorage.setItem('instashop_orders', JSON.stringify(orders));
-}
 
-function initiateRazorpayPayment(name, phone, email) {
     var options = {
         "key": "rzp_live_TYeDq9qlSgoN3G",
         "amount": currentProduct.price * 100,
         "currency": "INR",
-        "name": "InstaShop",
-        "description": currentProduct.name + " - Purchase",
-        "image": "https://yourstore.com/logo.png",
-        "prefill": {
-            "name": name,
-            "email": email,
-            "contact": phone
-        },
+        "name": "instahype",
+        "description": currentProduct.name,
+        "prefill": { "name": name, "email": email, "contact": phone },
         "handler": function (response) {
-            updateOrderPaymentStatus(response.razorpay_payment_id);
+            orders[orders.length - 1].status = 'completed';
+            orders[orders.length - 1].paymentId = response.razorpay_payment_id;
+            localStorage.setItem('instashop_orders', JSON.stringify(orders));
             alert("Payment Successful! Order ID: " + response.razorpay_payment_id);
             closeCheckoutModal();
-            window.location.href = "thank-you.html?order=" + response.razorpay_payment_id + "&product=" + currentProduct.name;
+            window.location.href = "thank-you.html?order=" + response.razorpay_payment_id;
         },
-        "theme": {
-            "color": "#3399cc"
-        }
+        "theme": { "color": "#000" }
     };
-    var rzp1 = new Razorpay(options);
-    rzp1.open();
-}
-
-function updateOrderPaymentStatus(paymentId) {
-    let orders = JSON.parse(localStorage.getItem('instashop_orders') || '[]');
-    if (orders.length > 0) {
-        orders[orders.length - 1].status = 'completed';
-        orders[orders.length - 1].paymentId = paymentId;
-        localStorage.setItem('instashop_orders', JSON.stringify(orders));
-    }
+    var rzp = new Razorpay(options);
+    rzp.open();
 }
 
 window.onclick = function(event) {
     const modal = document.getElementById('checkoutModal');
-    if (event.target == modal) {
-        closeCheckoutModal();
-    }
+    if (event.target == modal) closeCheckoutModal();
 }
 </script>
 

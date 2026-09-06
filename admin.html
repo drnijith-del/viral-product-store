@@ -3,61 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InstaShop - Admin Dashboard</title>
+    <title>instahype - Admin Dashboard</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f5f5; color: #333; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #f5f5f5; color: #000; }
+        
         .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
-        .header { background: #3399cc; color: white; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
-        .header h1 { font-size: 28px; margin-bottom: 5px; }
-        .header p { font-size: 14px; opacity: 0.9; }
+        .header { background: #000; color: #fff; padding: 30px 20px; border-radius: 8px; margin-bottom: 30px; }
+        .header h1 { font-size: 28px; font-weight: 800; margin-bottom: 5px; }
+        .header p { font-size: 14px; opacity: 0.8; }
         
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 30px; }
-        .stat-card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .stat-value { font-size: 32px; font-weight: 700; color: #3399cc; }
-        .stat-label { font-size: 14px; color: #666; margin-top: 5px; }
+        .stat-card { background: #fff; padding: 20px; border-radius: 8px; border-left: 4px solid #000; }
+        .stat-value { font-size: 28px; font-weight: 800; }
+        .stat-label { font-size: 13px; color: #999; margin-top: 5px; text-transform: uppercase; letter-spacing: 0.5px; }
         
         .controls { margin-bottom: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
-        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 600; transition: background 0.2s; }
-        .btn-primary { background: #3399cc; color: white; }
-        .btn-primary:hover { background: #297ca5; }
-        .btn-secondary { background: #ddd; color: #333; }
+        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 700; transition: background 0.2s; }
+        .btn-primary { background: #000; color: #fff; }
+        .btn-primary:hover { background: #333; }
+        .btn-secondary { background: #ddd; color: #000; }
         .btn-secondary:hover { background: #ccc; }
-        .btn-danger { background: #d32f2f; color: white; }
-        .btn-danger:hover { background: #c62828; }
+        .btn-danger { background: #d32f2f; color: #fff; }
+        .btn-danger:hover { background: #b71c1c; }
+        .btn-back { background: #f5f5f5; color: #000; border: 1px solid #ddd; }
+        .btn-back:hover { background: #eee; }
         
-        .table-container { background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); overflow-x: auto; }
+        .table-container { background: #fff; border-radius: 8px; overflow: auto; }
         table { width: 100%; border-collapse: collapse; }
-        th { background: #f5f5f5; padding: 12px; text-align: left; font-weight: 600; border-bottom: 2px solid #e0e0e0; font-size: 13px; }
+        th { background: #f5f5f5; padding: 12px; text-align: left; font-weight: 700; border-bottom: 2px solid #e0e0e0; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
         td { padding: 12px; border-bottom: 1px solid #e0e0e0; font-size: 13px; }
         tr:hover { background: #fafafa; }
         
-        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; }
         .status-pending { background: #fff3cd; color: #856404; }
         .status-completed { background: #d4edda; color: #155724; }
         .status-failed { background: #f8d7da; color: #721c24; }
         
-        .empty-state { text-align: center; padding: 40px 20px; color: #999; }
-        .empty-state svg { width: 60px; height: 60px; margin-bottom: 15px; opacity: 0.5; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #999; }
         
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; }
         .modal.show { display: flex; }
-        .modal-content { background: white; padding: 30px; border-radius: 10px; width: 90%; max-width: 600px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
-        .modal-header { font-size: 24px; font-weight: 700; margin-bottom: 20px; }
+        .modal-content { background: #fff; padding: 30px; border-radius: 10px; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; }
+        .modal-header { font-size: 20px; font-weight: 800; margin-bottom: 20px; }
         .detail-item { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #e0e0e0; }
-        .detail-label { font-size: 12px; color: #999; text-transform: uppercase; font-weight: 600; }
-        .detail-value { font-size: 16px; margin-top: 5px; }
-        .close-btn { float: right; cursor: pointer; font-size: 28px; font-weight: bold; }
-        
-        .export-button { background: #28a745; color: white; }
-        .export-button:hover { background: #218838; }
+        .detail-label { font-size: 11px; color: #999; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; }
+        .detail-value { font-size: 15px; margin-top: 5px; font-weight: 600; }
+        .close-btn { float: right; cursor: pointer; font-size: 28px; font-weight: bold; color: #999; }
+        .close-btn:hover { color: #000; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <h1>📊 InstaShop Admin Dashboard</h1>
+        <h1>📊 instahype Admin Dashboard</h1>
         <p>Manage and track all customer orders</p>
     </div>
 
@@ -68,11 +68,11 @@
         </div>
         <div class="stat-card">
             <div class="stat-value" id="completedOrders">0</div>
-            <div class="stat-label">Completed Orders</div>
+            <div class="stat-label">Completed</div>
         </div>
         <div class="stat-card">
             <div class="stat-value" id="pendingOrders">0</div>
-            <div class="stat-label">Pending Orders</div>
+            <div class="stat-label">Pending</div>
         </div>
         <div class="stat-card">
             <div class="stat-value" id="totalRevenue">₹0</div>
@@ -81,9 +81,10 @@
     </div>
 
     <div class="controls">
-        <button class="btn btn-primary" onclick="refreshOrders()">🔄 Refresh Orders</button>
-        <button class="btn export-button" onclick="exportToCSV()">📥 Export to CSV</button>
-        <button class="btn btn-danger" onclick="clearAllData()">🗑️ Clear All Data</button>
+        <button class="btn btn-primary" onclick="loadOrders()">🔄 Refresh</button>
+        <button class="btn btn-primary" onclick="exportToCSV()">📥 Export CSV</button>
+        <button class="btn btn-danger" onclick="clearAllData()">🗑️ Clear Data</button>
+        <button class="btn btn-back" onclick="window.location.href='index.html'">← Back to Store</button>
     </div>
 
     <div class="table-container">
@@ -91,11 +92,10 @@
             <thead>
                 <tr>
                     <th>Order ID</th>
-                    <th>Customer Name</th>
+                    <th>Name</th>
                     <th>Phone</th>
                     <th>Product</th>
                     <th>Price</th>
-                    <th>Address</th>
                     <th>Status</th>
                     <th>Date</th>
                     <th>Action</th>
@@ -151,12 +151,11 @@ function displayOrders(orders) {
     emptyState.style.display = 'none';
     tbody.innerHTML = orders.map((order, index) => `
         <tr>
-            <td>#${String(index + 1).padStart(5, '0')}</td>
+            <td><strong>#${String(index + 1).padStart(5, '0')}</strong></td>
             <td>${order.name || '-'}</td>
             <td>${order.phone || '-'}</td>
             <td>${order.productName || '-'}</td>
             <td>₹${order.price || 0}</td>
-            <td>${order.address ? order.address.substring(0, 30) + '...' : '-'}</td>
             <td>
                 <span class="status-badge status-${order.status || 'pending'}">
                     ${order.status === 'completed' ? '✓ Completed' : order.status === 'failed' ? '✗ Failed' : '⏳ Pending'}
@@ -184,7 +183,7 @@ function viewOrderDetails(index) {
             <div class="detail-value">${order.name}</div>
         </div>
         <div class="detail-item">
-            <div class="detail-label">Phone Number</div>
+            <div class="detail-label">Phone</div>
             <div class="detail-value">${order.phone}</div>
         </div>
         <div class="detail-item">
@@ -229,20 +228,14 @@ function closeDetailsModal() {
     document.getElementById('detailsModal').classList.remove('show');
 }
 
-function refreshOrders() {
-    loadOrders();
-    alert('Orders refreshed!');
-}
-
 function exportToCSV() {
     const orders = JSON.parse(localStorage.getItem('instashop_orders') || '[]');
-    
     if (orders.length === 0) {
         alert('No orders to export');
         return;
     }
 
-    const headers = ['Order ID', 'Customer Name', 'Phone', 'Email', 'Product', 'Price', 'Address', 'Status', 'Payment ID', 'Date'];
+    const headers = ['Order ID', 'Name', 'Phone', 'Email', 'Product', 'Price', 'Address', 'Status', 'Payment ID', 'Date'];
     const rows = orders.map((order, index) => [
         '#' + String(index + 1).padStart(5, '0'),
         order.name,
@@ -256,22 +249,19 @@ function exportToCSV() {
         new Date(order.timestamp).toLocaleString('en-IN')
     ]);
 
-    let csvContent = 'data:text/csv;charset=utf-8,' + headers.join(',') + '\n';
+    let csv = headers.join(',') + '\n';
     rows.forEach(row => {
-        csvContent += row.map(cell => '"' + (cell ? cell.toString().replace(/"/g, '""') : '') + '"').join(',') + '\n';
+        csv += row.map(cell => '"' + (cell ? cell.toString().replace(/"/g, '""') : '') + '"').join(',') + '\n';
     });
 
-    const encodedUri = encodeURI(csvContent);
     const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'instashop_orders_' + new Date().toISOString().split('T')[0] + '.csv');
-    document.body.appendChild(link);
+    link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+    link.download = 'instashop_orders_' + new Date().toISOString().split('T')[0] + '.csv';
     link.click();
-    document.body.removeChild(link);
 }
 
 function clearAllData() {
-    if (confirm('⚠️ Are you sure you want to delete ALL orders? This cannot be undone!')) {
+    if (confirm('⚠️ Are you sure? This cannot be undone!')) {
         localStorage.removeItem('instashop_orders');
         loadOrders();
         alert('All data cleared');
@@ -280,15 +270,10 @@ function clearAllData() {
 
 window.onclick = function(event) {
     const modal = document.getElementById('detailsModal');
-    if (event.target == modal) {
-        closeDetailsModal();
-    }
+    if (event.target == modal) closeDetailsModal();
 }
 
-// Load orders on page load
 window.addEventListener('load', loadOrders);
-
-// Auto-refresh every 5 seconds
 setInterval(loadOrders, 5000);
 </script>
 

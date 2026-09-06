@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Confirmed</title>
+    <title>Thank You - instahype</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: -apple-system, sans-serif; background: #f9f9f9; color: #333; }
-        .container { max-width: 400px; margin: 0 auto; background: white; padding: 40px 20px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; text-align: center; }
-        .checkmark { width: 80px; height: 80px; background: #4caf50; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 50px; }
-        h1 { font-size: 28px; margin-bottom: 10px; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #fff; color: #000; }
+        .container { max-width: 500px; margin: 0 auto; padding: 40px 20px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; text-align: center; }
+        .checkmark { width: 80px; height: 80px; background: #000; border-radius: 50%; margin: 0 auto 30px; display: flex; align-items: center; justify-content: center; font-size: 40px; }
+        h1 { font-size: 32px; font-weight: 800; margin-bottom: 16px; }
         p { font-size: 16px; color: #666; margin-bottom: 20px; line-height: 1.6; }
-        a { display: inline-block; background: #3399cc; color: white; padding: 12px 30px; border-radius: 6px; text-decoration: none; margin-top: 20px; }
+        .cta-button { background: #000; color: #fff; padding: 14px 40px; border: none; border-radius: 6px; font-size: 15px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 20px; transition: background 0.2s; }
+        .cta-button:hover { background: #333; }
     </style>
 </head>
 <body>
@@ -19,9 +20,9 @@
 <div class="container">
     <div class="checkmark">✓</div>
     <h1>Order Confirmed!</h1>
-    <p>Thank you for your purchase. Your order has been received.</p>
-    <p>We'll ship your product within 24 hours. You'll receive a tracking number via SMS.</p>
-    <a href="/">Back to Store</a>
+    <p>Thank you for your purchase. Your order has been received and we'll ship your product within 24 hours.</p>
+    <p style="font-size: 13px; color: #999;">You'll receive a tracking number via SMS.</p>
+    <a href="index.html" class="cta-button">Back to Store</a>
 </div>
 
 </body>

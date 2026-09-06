@@ -7,41 +7,86 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f9f9f9; color: #333; }
-        .container { max-width: 400px; margin: 0 auto; background: white; padding: 20px; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
-        img { width: 100%; border-radius: 8px; object-fit: cover; margin-bottom: 15px; }
-        h1 { font-size: 24px; font-weight: 600; margin-bottom: 8px; }
-        .price { font-size: 28px; color: #222; font-weight: 700; margin-bottom: 10px; }
-        p { font-size: 14px; color: #666; line-height: 1.6; margin-bottom: 20px; }
-        button { background: #3399cc; color: white; border: none; width: 100%; padding: 16px; font-size: 16px; font-weight: 600; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
-        button:hover { background: #297ca5; }
-        button:active { transform: scale(0.98); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        h1 { text-align: center; font-size: 32px; margin-bottom: 30px; }
+        .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+        .product-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); transition: transform 0.2s, box-shadow 0.2s; }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+        .product-image { width: 100%; height: 250px; object-fit: cover; }
+        .product-info { padding: 15px; }
+        .product-name { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+        .product-description { font-size: 13px; color: #666; margin-bottom: 10px; line-height: 1.4; }
+        .product-price { font-size: 24px; font-weight: 700; color: #222; margin-bottom: 12px; }
+        .buy-button { background: #3399cc; color: white; border: none; width: 100%; padding: 14px; font-size: 15px; font-weight: 600; border-radius: 6px; cursor: pointer; transition: background 0.2s; }
+        .buy-button:hover { background: #297ca5; }
+        .buy-button:active { transform: scale(0.98); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80" alt="Viral Product" loading="lazy">
+    <h1>Viral Products Store</h1>
     
-    <h1>Amazing Viral Product</h1>
-    <div class="price">₹499</div>
-    <p>This is the viral product you saw on Instagram. Limited stock available. Get yours today with free shipping!</p>
-    
-    <button id="rzp-button">Buy Now (UPI / Card)</button>
+    <div class="products-grid">
+        <!-- Product 1 -->
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80" alt="Product 1" class="product-image">
+            <div class="product-info">
+                <div class="product-name">Premium Wireless Earbuds</div>
+                <div class="product-description">High quality sound with noise cancellation. 24 hrs battery life.</div>
+                <div class="product-price">₹599</div>
+                <button class="buy-button" onclick="buyProduct(1, 'Premium Wireless Earbuds')">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- Product 2 -->
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&q=80" alt="Product 2" class="product-image">
+            <div class="product-info">
+                <div class="product-name">Smart Watch Pro</div>
+                <div class="product-description">Heart rate monitor, step counter, water resistant. 7-day battery.</div>
+                <div class="product-price">₹599</div>
+                <button class="buy-button" onclick="buyProduct(2, 'Smart Watch Pro')">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- Product 3 -->
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&q=80" alt="Product 3" class="product-image">
+            <div class="product-info">
+                <div class="product-name">Portable Phone Charger</div>
+                <div class="product-description">20000mAh capacity. Fast charging. Dual USB ports.</div>
+                <div class="product-price">₹599</div>
+                <button class="buy-button" onclick="buyProduct(3, 'Portable Phone Charger')">Buy Now</button>
+            </div>
+        </div>
+
+        <!-- Product 4 -->
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=400&q=80" alt="Product 4" class="product-image">
+            <div class="product-info">
+                <div class="product-name">Wireless Phone Stand</div>
+                <div class="product-description">360° rotation. Adjustable height. Non-slip grip.</div>
+                <div class="product-price">₹599</div>
+                <button class="buy-button" onclick="buyProduct(4, 'Wireless Phone Stand')">Buy Now</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://checkout.razorpay.com/v1/checkout.js" async></script>
 <script>
-document.getElementById('rzp-button').onclick = function(e){
+function buyProduct(productId, productName) {
     var options = {
         "key": "rzp_live_TYeDq9qlSgoN3G",
-        "amount": "49900",
+        "amount": "59900",
         "currency": "INR",
         "name": "Your Store Name",
-        "description": "Viral Product Purchase",
+        "description": productName + " - Purchase",
         "image": "https://yourstore.com/logo.png",
         "handler": function (response){
             alert("Payment Successful! Order ID: " + response.razorpay_payment_id);
-            window.location.href = "/thank-you.html";
+            window.location.href = "/thank-you.html?order=" + response.razorpay_payment_id + "&product=" + productName;
         },
         "prefill": {
             "name": "",
@@ -54,7 +99,6 @@ document.getElementById('rzp-button').onclick = function(e){
     };
     var rzp1 = new Razorpay(options);
     rzp1.open();
-    e.preventDefault();
 }
 </script>
 
